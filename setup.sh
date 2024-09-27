@@ -1,13 +1,13 @@
 # Variables
-network_name=hadoop89
+network_name=test
 
 docker_img=hadoop89
 docker_tag=latest
 
-master_name=hadoop89-master
-worker_name=hadoop89-worker
+master_name=${network_name}-master
+worker_name=${network_name}-worker
 
-nb_workers=3
+nb_workers=2
 
 # Stop and remove the containers
 ./clean.sh ${nb_workers}
@@ -21,8 +21,16 @@ echo "Network ${network_name} created"
 # Modify workers confi}guration
 rm -f config/workers
 for i in $(seq 1 $((nb_workers))); do
-    echo "hadoop89-worker${i}" >> config/workers
+    echo "${worker_name}${i}" >> config/workers
 done
+
+# Modify XML configuration files
+xmlstarlet ed -L -u "/configuration/property[name='yarn.resourcemanager.hostname']/value" -v "${master_name}" config/yarn-site.xml
+xmlstarlet ed -L -u "/configuration/property[name='hbase.rootdir']/value" -v "hdfs://${master_name}:9000/hbase" config/hbase-site.xml
+xmlstarlet ed -L -u "/configuration/property[name='fs.defaultFS']/value" -v "hdfs://${master_name}:9000/" config/hbase-site.xml
+
+# Modify ssh configuration
+ sed -i '7 c\Host ${network_name}-*' config/ssh_config
 
 # Build the docker image
 docker build -t "${docker_img}:${docker_tag}" .

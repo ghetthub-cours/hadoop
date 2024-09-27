@@ -1,5 +1,7 @@
-master_name=hadoop89-master
-worker_name=hadoop89-worker
+network_name=test
+
+master_name=${network_name}-master
+worker_name=${network_name}-worker
 
 default_nb_workers=3
 input_nb_workers=${@:1}

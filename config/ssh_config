@@ -4,6 +4,6 @@ Host localhost
 Host 0.0.0.0
   StrictHostKeyChecking no
   
-Host hadoop89-*
+Host ${network_name}-*
    StrictHostKeyChecking no
    UserKnownHostsFile=/dev/null
