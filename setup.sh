@@ -30,7 +30,7 @@ xmlstarlet ed -L -u "/configuration/property[name='hbase.rootdir']/value" -v "hd
 xmlstarlet ed -L -u "/configuration/property[name='fs.defaultFS']/value" -v "hdfs://${master_name}:9000/" config/hbase-site.xml
 
 # Modify ssh configuration
- sed -i '7 c\Host ${network_name}-*' config/ssh_config
+ sed -i '7 c\Host '${network_name}'-*' config/ssh_config
 
 # Build the docker image
 docker build -t "${docker_img}:${docker_tag}" .
